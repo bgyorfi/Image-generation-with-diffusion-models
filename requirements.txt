@@ -1,0 +1,12 @@
+numpy
+pillow
+tqdm
+datetime
+requests
+opendatasets
+pandas
+matplotlib
+torch
+torchvision
+torchmetrics
+
