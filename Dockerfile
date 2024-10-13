@@ -13,4 +13,4 @@ RUN chmod 600 /root/.kaggle/kaggle.json
 
 RUN mkdir -p /app/datasets/flowers102 /app/datasets/celeba
 
-CMD ["python", "main.py"]
+CMD ["python", "project/main.py"]

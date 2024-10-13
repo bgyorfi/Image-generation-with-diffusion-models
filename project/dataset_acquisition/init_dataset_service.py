@@ -6,17 +6,17 @@ import os
 
 def download_datasets():
     
-    flowers_dir = 'datasets/flowers-recognition'
-    celebA_dir = 'datasets/celeba-dataset'
+    flowers_dir = 'flowers-recognition/flowers'
+    celebA_dir = 'celeba-dataset/img_align_celeba'
 
-    if not os.path.exists(flowers_dir) or not os.listdir(flowers_dir):
+    if not os.path.exists(flowers_dir) or not os.path.isdir(flowers_dir) or len(os.listdir(flowers_dir)) == 0:
         print("Flowers dataset nem található, letöltés folyamatban...")
         flowers_url = "https://www.kaggle.com/datasets/alxmamaev/flowers-recognition"
         od.download(flowers_url)
     else:
         print("Flowers dataset már létezik, nincs szükség letöltésre.")
 
-    if not os.path.exists(celebA_dir) or not os.listdir(celebA_dir):
+    if not os.path.exists(celebA_dir) or not os.path.isdir(celebA_dir) or len(os.listdir(celebA_dir)) == 0:
         print("CelebA dataset nem található, letöltés folyamatban...")
         celebA_url = "https://www.kaggle.com/datasets/jessicali9530/celeba-dataset"
         od.download(celebA_url)
