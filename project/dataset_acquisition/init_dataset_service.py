@@ -21,4 +21,4 @@ def download_datasets():
         celebA_url = "https://www.kaggle.com/datasets/jessicali9530/celeba-dataset"
         od.download(celebA_url)
     else:
-        print("CelebA dataset már létezik, nincs szükség letöltésre.")
+        print("CelebA dataset already donwloaded.")
