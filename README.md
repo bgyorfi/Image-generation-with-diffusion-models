@@ -49,7 +49,7 @@ docker run -it ddpm-project
 - **`main.py`**: The main entry point for running the data preparation tests and loading the datasets.
 - **`Dockerfile`**: Contains the instructions to build a Docker container for the application. It sets up the environment, installs dependencies, and configures the working directory.
 - **`.gitignore`**: Lists files and directories to be ignored by Git, ensuring that unnecessary files are not included in the version control.
-- **`kaggle.json`**: Contains API credentials for accessing Kaggle datasets (if applicable).
+- **`kaggle.json`**: Contains API credentials for accessing Kaggle datasets.
 - **`requirements.txt`**: Lists Python package dependencies required to run the project.
 - **`README.md`**: This file, which provides an overview and documentation for the project.
 
