@@ -30,13 +30,36 @@ The datasets used in this project are:
 
 # How to Start the Application
 
-First, build the Docker Container
+Open a terminal in the project root directory. First, build the Docker Image:
 
 ```
 docker build -t ddpm-project .
 ```
 
-Second, run it.
+Then, run the docker container:
 ```
 docker run -it ddpm-project
 ```
+
+## File Functions
+
+- **`data_preparation/`**: This directory contains scripts related to data preparation and loading.
+  - **`dataloader_service.py`**: Responsible for creating DataLoader instances for training, validation, and testing datasets. It handles batching and shuffling of data.
+  - **`init_dataset_service.py`**: Initializes the dataset service, manages dataset access and setup.
+- **`main.py`**: The main entry point for running the data preparation tests and loading the datasets.
+- **`Dockerfile`**: Contains the instructions to build a Docker container for the application. It sets up the environment, installs dependencies, and configures the working directory.
+- **`.gitignore`**: Lists files and directories to be ignored by Git, ensuring that unnecessary files are not included in the version control.
+- **`kaggle.json`**: Contains API credentials for accessing Kaggle datasets (if applicable).
+- **`requirements.txt`**: Lists Python package dependencies required to run the project.
+- **`README.md`**: This file, which provides an overview and documentation for the project.
+
+## Related Works
+
+"An In-Depth Guide to Denoising Diffusion Probabilistic Models DDPM – Theory to Implementation" - by Vaibhav Singh (2023) 
+
+"Denoising Diffusion Implicit Models" by András Béres (2022)
+
+"The Annotated Diffusion Model" - by Niels Rogge et al. (2022)
+
+- **GitHub Repositories**:
+  - (https://github.com/pytorch/pytorch) - LearnOpenCV
