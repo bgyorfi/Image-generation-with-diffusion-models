@@ -1,5 +1,12 @@
+numpy
+pillow
+tqdm
+datetime
 requests
 opendatasets
 pandas
 matplotlib
-Pillow
+torch
+torchvision
+torchmetrics
+
