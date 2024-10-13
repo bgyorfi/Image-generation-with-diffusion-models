@@ -10,7 +10,7 @@ def download_datasets():
     celebA_dir = 'celeba-dataset/img_align_celeba'
 
     if not os.path.exists(flowers_dir) or not os.path.isdir(flowers_dir) or len(os.listdir(flowers_dir)) == 0:
-        print("Flowers dataset nem található, letöltés folyamatban...")
+        print("Flowers dataset not found, download in progress...")
         flowers_url = "https://www.kaggle.com/datasets/alxmamaev/flowers-recognition"
         od.download(flowers_url)
     else:
