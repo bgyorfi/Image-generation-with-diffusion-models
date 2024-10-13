@@ -37,7 +37,7 @@ def get_dataset(dataset_name='Flowers'):
     
     return dataset
 
-def split_dataset(dataset, train_ratio=0.7, val_ratio=0.15, test_ratio=0.15):
+def split_dataset(dataset, train_ratio=0.7, val_ratio=0.15):
     total_size = len(dataset)
     train_size = int(train_ratio * total_size)
     val_size = int(val_ratio * total_size)
