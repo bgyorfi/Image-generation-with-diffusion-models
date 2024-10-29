@@ -36,9 +36,14 @@ Open a terminal in the project root directory. First, build the Docker Image:
 docker build -t ddpm-project .
 ```
 
-Then, run the docker container:
+Then, run the docker container with docker compose:
 ```
-docker run -it ddpm-project
+docker compose up
+```
+
+If you want to delete the container you can do it with:
+```
+docker compose down
 ```
 
 ## File Functions
@@ -47,6 +52,7 @@ docker run -it ddpm-project
   - **`dataloader_service.py`**: Responsible for creating DataLoader instances for training, validation, and testing datasets. It handles batching and shuffling of data.
   - **`init_dataset_service.py`**: Initializes the dataset service, manages dataset access and setup.
 - **`main.py`**: The main entry point for running the data preparation tests and loading the datasets.
+- **`docker-compose.yml`**: Makes it easier to run the container as an application.
 - **`Dockerfile`**: Contains the instructions to build a Docker container for the application. It sets up the environment, installs dependencies, and configures the working directory.
 - **`.gitignore`**: Lists files and directories to be ignored by Git, ensuring that unnecessary files are not included in the version control.
 - **`kaggle.json`**: Contains API credentials for accessing Kaggle datasets.
