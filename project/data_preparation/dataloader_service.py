@@ -1,5 +1,5 @@
+import torch
 import torchvision.transforms as TF
-import torchvision.datasets as datasets
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader, random_split
 
@@ -15,16 +15,25 @@ class DeviceDataLoader():
     def __len__(self):
         return len(self.dataloader)
 
+class ClampTransform:
+    def __init__(self, min_value=0.0, max_value=1.0):
+        self.min_value = min_value
+        self.max_value = max_value
+
+    def __call__(self, img):
+        return torch.clamp(img, min=self.min_value, max=self.max_value)
+
 
 def get_dataset(dataset_name='Flowers'):
     transforms = TF.Compose(
         [
             TF.ToTensor(),
-            TF.Resize((32, 32), 
+            TF.Resize((128, 128), 
                       interpolation=TF.InterpolationMode.BICUBIC, 
                       antialias=True),
+            ClampTransform(min_value=0.0, max_value=1.0),
             TF.RandomHorizontalFlip(),
-            TF.Lambda(lambda t: (t * 2) - 1) # Scale between [-1, 1] 
+            # TF.Lambda(lambda t: (t * 2) - 1) # Scale between [-1, 1] 
         ]
     )
     
