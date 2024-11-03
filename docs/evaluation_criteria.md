@@ -17,9 +17,7 @@ Let:
 
 The FID score is calculated as:
 
-$$
-\text{FID} = \|\mu_r - \mu_g\|^2_2 + \text{Tr}(\Sigma_r + \Sigma_g - 2(\Sigma_r \Sigma_g)^{1/2})
-$$
+$$\text{FID} = \|\mu_r - \mu_g\|^2_2 + \text{Tr}(\Sigma_r + \Sigma_g - 2(\Sigma_r \Sigma_g)^{1/2})$$
 
 Where:
 
@@ -44,9 +42,7 @@ The Inception Score (IS) is a metric used to evaluate the quality and diversity 
 
 Given a generated image $x$, let $p(y|x)$ be the conditional probability distribution of image class labels $y$ given by a pretrained Inception network. The Inception Score is calculated as:
 
-$$
-\text{IS} = \exp \left( \mathbb{E}_x \left[ D_{\text{KL}}(p(y|x) \| p(y)) \right] \right)
-$$
+$$\text{IS} = \exp \left( \mathbb{E}_x \left[ D_{\text{KL}}(p(y|x) \| p(y)) \right] \right)$$
 
 Where:
 
