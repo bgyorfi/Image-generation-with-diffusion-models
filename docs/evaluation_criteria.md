@@ -42,7 +42,7 @@ The Inception Score (IS) is a metric used to evaluate the quality and diversity 
 
 Given a generated image $x$, let $p(y|x)$ be the conditional probability distribution of image class labels $y$ given by a pretrained Inception network. The Inception Score is calculated as:
 
-$$\text{IS} = \exp ( \mathbb{E}_x [ D_{\text{KL}}(p(y|x) \| p(y)) ])$$
+$$\text{IS} = \exp ( E_x [ D_{\text{KL}}(p(y|x) \| p(y)) ])$$
 
 Where:
 
