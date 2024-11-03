@@ -13,7 +13,7 @@ The Fréchet Inception Distance (FID) evaluates the quality of images generated 
 Let:
 
 - $\mu_r$ and $\Sigma_r$ be the mean and covariance matrix of real images.
-- $ \mu_g $ and $ \Sigma_g $ be the mean and covariance matrix of generated images.
+- $\mu_g$ and $\Sigma_g$ be the mean and covariance matrix of generated images.
 
 The FID score is calculated as:
 
@@ -23,9 +23,9 @@ $$
 
 Where:
 
-- $ \|\mu_r - \mu_g\|^2_2 $: Squared Euclidean distance between the means.
-- $ \text{Tr} $: Trace of a matrix.
-- $ (\Sigma_r \Sigma_g)^{1/2} $: Matrix square root of the product of covariances.
+- $\|\mu_r - \mu_g\|^2_2$: Squared Euclidean distance between the means.
+- $\text{Tr}$: Trace of a matrix.
+- $(\Sigma_r \Sigma_g)^{1/2}$: Matrix square root of the product of covariances.
 
 ### Interpretation
 
