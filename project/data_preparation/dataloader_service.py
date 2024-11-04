@@ -24,18 +24,22 @@ class ClampTransform:
         return torch.clamp(img, min=self.min_value, max=self.max_value)
 
 
-def get_dataset(dataset_name='Flowers'):
-    transforms = TF.Compose(
-        [
-            TF.ToTensor(),
-            TF.Resize((128, 128), 
-                      interpolation=TF.InterpolationMode.BICUBIC, 
-                      antialias=True),
-            ClampTransform(min_value=0.0, max_value=1.0),
+def get_dataset(dataset_name='Flowers', , augment=False):
+    if augment:
+        transforms = TF.Compose([
+            TF.Resize((256, 256)),
             TF.RandomHorizontalFlip(),
-            # TF.Lambda(lambda t: (t * 2) - 1) # Scale between [-1, 1] 
-        ]
-    )
+            TF.RandomRotation(15),
+            TF.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
+            TF.ToTensor(),
+            TF.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+        ])
+    else:
+        transforms = TF.Compose([
+            TF.Resize((128, 128), interpolation=TF.InterpolationMode.BICUBIC, antialias=True),
+            TF.ToTensor(),
+            ClampTransform(min_value=0.0, max_value=1.0),
+        ])
     
     if dataset_name == "Flowers":
         dataset = ImageFolder(root="flowers-recognition/flowers", transform=transforms)
