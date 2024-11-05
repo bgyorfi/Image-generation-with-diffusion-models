@@ -24,7 +24,7 @@ class ClampTransform:
         return torch.clamp(img, min=self.min_value, max=self.max_value)
 
 
-def get_dataset(dataset_name='Flowers', , augment=False):
+def get_dataset(dataset_name='Flowers', augment=False):
     if augment:
         transforms = TF.Compose([
             TF.Resize((256, 256)),
