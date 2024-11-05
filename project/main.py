@@ -1,6 +1,10 @@
+import argparse, os
 from dataset_acquisition import init_dataset_service
 from data_preparation import dataloader_service
 import torch
+
+from model import vae_model
+from train import train_vae
 
 init_dataset_service.download_datasets()
 
@@ -63,10 +67,68 @@ def test_data_preparation():
     except Exception as e:
         print(f"Data preparation test failed: {e}")
 
+def train_models():
+    print("Setting up device for training...")
+
+    device = train_vae.setup_device()
+
+    flowers_train_loader, _, flowers_test_loader, celeb_train_loader, _, celeb_test_loader = train_vae.load_data()
+
+    print("Training VAE on flower dataset...")
+    model_flowers = train_vae.train(flowers_train_loader, device, num_epoch=1)
+    print("Flower model trained successfully. Saving model...")
+
+    torch.save(model_flowers.state_dict(), 'model_flowers.pth')
+
+    print("Training VAE on CelebA dataset...")
+    #model_celeb = train_vae.train(celeb_train_loader, device, num_epoch=1)
+    print("CelebA model trained successfully. Saving model...")
+
+    # torch.save(model_celeb.state_dict(), 'model_celeb.pth')
+
+    return model_flowers
+    #, model_celeb
+
+def load_models():
+    print("Loading trained models from disk...")
+    device = train_vae.setup_device()
+    model_flowers = vae_model.VAE()
+    # model_celeb = vae_model.VAE()
+    model_flowers.load_state_dict(torch.load('model_flowers.pth'))
+    # model_celeb.load_state_dict(torch.load('model_celeb.pth'))
+    print("Models loaded successfully.")
+    return model_flowers, device
+#  return model_flowers, model_celeb, device
+
+def generate_images(args, model_flowers, device):
+    print("Generating images...")
+
+    if args.generate_flower:
+        train_vae.generate_images(model_flowers, device, output_dir='generated_flower_images')
+        print("Flower images generated successfully.")
+    # elif args.generate_celeb:
+    #     train_vae.generate_images(model_celeb, device, output_dir='generated_celeb_images')
+    #     print("CelebA images generated successfully.")
+
 if __name__ == "__main__":
     try:
-        test_data_preparation()
-        while True:
-            pass
+        if not os.path.exists('model_flowers.pth'):
+        #or not os.path.exists('model_celeb.pth'):
+            print("Trained models not found. Starting training...")
+            model_flowers = train_models()
+            # model_flowers, model_celeb = train_models()
+        else:
+            print("Trained models found. Loading models...")
+            model_flowers, device = load_models()
+            # model_flowers, model_celeb, device = load_models()
+
+        parser = argparse.ArgumentParser(description='Generate images after training VAE.')
+        parser.add_argument('--generate-flower', action='store_true', help='Generate flower images')
+        parser.add_argument('--generate-celeb', action='store_true', help='Generate CelebA images')
+
+        args = parser.parse_args()
+        generate_images(args, model_flowers, device=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+        # generate_images(args, model_flowers, model_celeb, device=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+        
     except KeyboardInterrupt:
         print("Exit...")
