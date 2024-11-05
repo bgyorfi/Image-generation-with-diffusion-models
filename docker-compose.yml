@@ -1,0 +1,7 @@
+version: '3'
+services:
+  my-container:
+    image: ddpm-project
+    container_name: ddpm-container
+    stdin_open: true # Keeps stdin open
+    tty: true        # Allocates a pseudo-TTY
