@@ -26,11 +26,11 @@ class ClampTransform:
         return torch.clamp(img, min=self.min_value, max=self.max_value)
 
 
-def get_dataset(dataset_name="Flowers", augment=False, root="./"):
+def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./"):
     if augment:
         transforms = TF.Compose(
             [
-                TF.Resize((256, 256)),
+                TF.Resize((image_size, image_size)),
                 TF.RandomHorizontalFlip(),
                 TF.RandomRotation(15),
                 TF.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
@@ -42,12 +42,13 @@ def get_dataset(dataset_name="Flowers", augment=False, root="./"):
         transforms = TF.Compose(
             [
                 TF.Resize(
-                    (128, 128),
+                    (image_size, image_size),
                     interpolation=TF.InterpolationMode.BICUBIC,
                     antialias=True,
                 ),
                 TF.ToTensor(),
                 ClampTransform(min_value=0.0, max_value=1.0),
+                TF.Lambda(lambda x: x * 2.0 - 1.0),
             ]
         )
 
@@ -75,9 +76,9 @@ def split_dataset(dataset, train_ratio=0.7, val_ratio=0.15):
 
 
 def get_dataloader(
-    dataset_name="Flowers", batch_size=32, shuffle=True, device="cpu", root="./"
+    dataset_name="Flowers", batch_size=32, image_size=64, shuffle=True, device="cpu", root="./"
 ):
-    dataset = get_dataset(dataset_name=dataset_name, root=root)
+    dataset = get_dataset(dataset_name=dataset_name, root=root, image_size=image_size)
 
     train_set, val_set, test_set = split_dataset(dataset)
 
