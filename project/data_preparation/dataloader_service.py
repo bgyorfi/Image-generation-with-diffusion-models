@@ -35,7 +35,7 @@ def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./")
                 TF.RandomRotation(15),
                 TF.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
                 TF.ToTensor(),
-                TF.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+                TF.Lambda(lambda x: x * 2.0 - 1.0),
             ]
         )
     else:
@@ -66,28 +66,25 @@ def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./")
     return dataset
 
 
-def split_dataset(dataset, train_ratio=0.7, val_ratio=0.15):
+def split_dataset(dataset, train_ratio=0.7):
     total_size = len(dataset)
     train_size = int(train_ratio * total_size)
-    val_size = int(val_ratio * total_size)
-    test_size = total_size - train_size - val_size
+    test_size = total_size - train_size
 
-    return random_split(dataset, [train_size, val_size, test_size])
+    return random_split(dataset, [train_size, test_size])
 
 
 def get_dataloader(
-    dataset_name="Flowers", batch_size=32, image_size=64, shuffle=True, device="cpu", root="./"
+    dataset_name="Flowers", batch_size=32, image_size=64, shuffle=True, augment=False, device="cpu", root="./"
 ):
-    dataset = get_dataset(dataset_name=dataset_name, root=root, image_size=image_size)
+    dataset = get_dataset(dataset_name=dataset_name, root=root, image_size=image_size, augment=augment)
 
-    train_set, val_set, test_set = split_dataset(dataset)
+    train_set, test_set = split_dataset(dataset)
 
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=shuffle)
-    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=False)
     test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
 
     train_loader = DeviceDataLoader(train_loader, device)
-    val_loader = DeviceDataLoader(val_loader, device)
     test_loader = DeviceDataLoader(test_loader, device)
 
-    return train_loader, val_loader, test_loader
+    return train_loader, test_loader
