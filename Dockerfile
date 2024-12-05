@@ -9,8 +9,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY ./project/src ./src
 COPY ./project/models ./models
 
-COPY kaggle.json ./src/dataset_acquisition
-RUN chmod 600 ./src/dataset_acquisition/kaggle.json
+COPY kaggle.json ./kaggle.json
+RUN chmod 600 ./kaggle.json
 
 RUN mkdir -p /app/datasets/flowers102 /app/datasets/celeba
 

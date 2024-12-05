@@ -26,7 +26,7 @@ class ClampTransform:
         return torch.clamp(img, min=self.min_value, max=self.max_value)
 
 
-def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./"):
+def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./", baseline=False):
     if augment:
         transforms = TF.Compose(
             [
@@ -39,18 +39,18 @@ def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./")
             ]
         )
     else:
-        transforms = TF.Compose(
-            [
-                TF.Resize(
-                    (image_size, image_size),
-                    interpolation=TF.InterpolationMode.BICUBIC,
-                    antialias=True,
-                ),
-                TF.ToTensor(),
-                ClampTransform(min_value=0.0, max_value=1.0),
-                TF.Lambda(lambda x: x * 2.0 - 1.0),
-            ]
-        )
+        transform_list = [
+            TF.Resize(
+                (image_size, image_size),
+                interpolation=TF.InterpolationMode.BICUBIC,
+                antialias=True,
+            ),
+            TF.ToTensor(),
+            ClampTransform(min_value=0.0, max_value=1.0),
+        ]
+        if not baseline:
+            transform_list.append(TF.Lambda(lambda x: x * 2.0 - 1.0))
+        transforms = TF.Compose(transform_list)
 
     if dataset_name == "Flowers":
         dataset = ImageFolder(
@@ -75,9 +75,9 @@ def split_dataset(dataset, train_ratio=0.7):
 
 
 def get_dataloader(
-    dataset_name="Flowers", batch_size=32, image_size=64, shuffle=True, augment=False, device="cpu", root="./"
+    dataset_name="Flowers", batch_size=32, image_size=64, shuffle=True, augment=False, device="cpu", root="./", baseline=False
 ):
-    dataset = get_dataset(dataset_name=dataset_name, root=root, image_size=image_size, augment=augment)
+    dataset = get_dataset(dataset_name=dataset_name, root=root, image_size=image_size, augment=augment, baseline=baseline)
 
     train_set, test_set = split_dataset(dataset)
 

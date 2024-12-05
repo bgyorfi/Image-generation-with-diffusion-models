@@ -140,6 +140,9 @@ if __name__ == "__main__":
             generate_images("flowers")
         elif args.generate_celebs:
             generate_images("CelebA")
+
+        while True:
+            pass
         
     except KeyboardInterrupt:
         print("Exit...")

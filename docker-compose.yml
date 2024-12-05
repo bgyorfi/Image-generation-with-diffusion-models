@@ -1,10 +1,10 @@
-version: "3"
 services:
   ddpm-container:
     build: .
     image: ddpm-project
     container_name: ddpm-container
-    stdin_open: true # Keeps stdin open
-    tty: true # Allocates a pseudo-TTY
+    stdin_open: true 
+    tty: true
     volumes:
-      - ./kaggle.json:/root/.kaggle/kaggle.json
+      - ./data:/app/datasets
+    command: ["python", "src/main.py"]
