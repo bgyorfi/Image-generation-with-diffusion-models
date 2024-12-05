@@ -26,7 +26,7 @@ class ClampTransform:
         return torch.clamp(img, min=self.min_value, max=self.max_value)
 
 
-def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./", baseline=False):
+def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./datasets/", baseline=False):
     if augment:
         transforms = TF.Compose(
             [
@@ -54,11 +54,11 @@ def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./",
 
     if dataset_name == "Flowers":
         dataset = ImageFolder(
-            root=f"{root}flowers-recognition/flowers", transform=transforms
+            root=f"{root}flowers102/flowers-recognition/flowers", transform=transforms
         )
     elif dataset_name == "CelebA":
         dataset = ImageFolder(
-            root=f"{root}celeba-dataset/img_align_celeba", transform=transforms
+            root=f"{root}celeba-dataset/celeba-dataset/img_align_celeba", transform=transforms
         )
     else:
         raise ValueError(f"Dataset {dataset_name} is not supported.")
