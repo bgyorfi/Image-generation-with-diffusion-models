@@ -3,14 +3,15 @@ FROM python:3.9-slim
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY ./project/src ./src
+COPY ./project/models ./models
 
-COPY kaggle.json /root/.kaggle/kaggle.json
-RUN chmod 600 /root/.kaggle/kaggle.json
+COPY kaggle.json ./src/dataset_acquisition
+RUN chmod 600 ./src/dataset_acquisition/kaggle.json
 
 RUN mkdir -p /app/datasets/flowers102 /app/datasets/celeba
 
-CMD ["python", "project/main.py"]
+CMD ["python", "src/main.py"]
