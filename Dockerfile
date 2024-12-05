@@ -12,6 +12,7 @@ COPY ./project/models ./models
 COPY kaggle.json ./kaggle.json
 RUN chmod 600 ./kaggle.json
 
-RUN mkdir -p /app/datasets/flowers102 /app/datasets/celeba
+RUN mkdir -p /app/datasets/flowers102 /app/datasets/celeba && \
+    chmod -R 777 /app/datasets
 
 CMD ["python", "src/main.py"]

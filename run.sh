@@ -1,13 +1,15 @@
 #!/bin/bash
 
+# Function to display help
 function show_help {
-    echo "Usage: $0 [--train] [--evaluate] [--generate]"
+    echo "Usage: $0 [--train] [--flowers-only] [--eval] [--generate-flowers] [--generate-celebs]"
     echo "Options:"
-    echo "  --train       Train the model"
-    echo "  --evaluate    Evaluate the model"
-    echo "  --generate    Generate images"
-    echo "  --all         Run train, evaluate, and generate sequentially"
-    echo "  -h, --help    Show this help message"
+    echo "  --train               Train DDPM models"
+    echo "  --flowers-only        Train only on the flowers dataset (used with --train)"
+    echo "  --eval                Evaluate DDPM models"
+    echo "  --generate-flowers    Generate images from the flowers dataset"
+    echo "  --generate-celebs     Generate images from the CelebA dataset"
+    echo "  -h, --help            Show this help message"
 }
 
 if [ $# -eq 0 ]; then
@@ -15,6 +17,7 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+# Parse command-line arguments
 COMMAND_ARGS=()
 for arg in "$@"; do
     case $arg in
@@ -22,16 +25,20 @@ for arg in "$@"; do
             COMMAND_ARGS+=("--train")
             shift
             ;;
-        --evaluate)
-            COMMAND_ARGS+=("--evaluate")
+        --flowers-only)
+            COMMAND_ARGS+=("--flowers-only")
             shift
             ;;
-        --generate)
-            COMMAND_ARGS+=("--generate")
+        --eval)
+            COMMAND_ARGS+=("--eval")
             shift
             ;;
-        --all)
-            COMMAND_ARGS+=("--train" "--evaluate" "--generate")
+        --generate-flowers)
+            COMMAND_ARGS+=("--generate-flowers")
+            shift
+            ;;
+        --generate-celebs)
+            COMMAND_ARGS+=("--generate-celebs")
             shift
             ;;
         -h|--help)
@@ -46,6 +53,21 @@ for arg in "$@"; do
     esac
 done
 
-DOCKER_COMMAND="python main.py ${COMMAND_ARGS[@]}"
+# Build the command to run inside the container
+DOCKER_COMMAND="python src/main.py ${COMMAND_ARGS[@]}"
 
-docker-compose run ddpm-container $DOCKER_COMMAND
+# Define the container name
+container_name="ddpm-container"
+
+# Check if the container exists (running or stopped)
+if docker ps -a --filter "name=${container_name}" | grep -q ${container_name}; then
+    if docker ps --filter "name=${container_name}" | grep -q ${container_name}; then
+        docker exec -it ${container_name} $DOCKER_COMMAND
+    else
+        docker start ${container_name}
+        docker exec -it ${container_name} $DOCKER_COMMAND
+    fi
+else
+    docker compose up -d
+    docker exec -it ${container_name} $DOCKER_COMMAND
+fi
