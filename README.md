@@ -7,9 +7,7 @@ Created by: Cristiano McDonaldo
 - Füstös Gergely
 - Györfi Bence
 
-
 ## Project Overview
-
 
 This project implements unconditional diffusion models, specifically DDPM (Denoising Diffusion Probabilistic Model) and DDIM (Denoising Diffusion Implicit Model), to generate realistic images. The models are evaluated on two datasets: CelebA (a large-scale celebrity face dataset) and Flowers102 (a dataset containing images of 102 flower categories).
 
@@ -30,21 +28,80 @@ The datasets used in this project are:
 
 # How to Start the Application
 
-Open a terminal in the project root directory. First, build the Docker Image:
+Open a terminal in the project root directory. To start the application, follow these steps:
+
+### 1. Build the Docker Image
+
+Before running the application, you need to build the Docker image:
 
 ```
-docker build -t ddpm-project .
+docker-compose build
 ```
 
-Then, run the docker container with docker compose:
+### 2. Grant Execute Permission to Scripts
+
+If you are using the run and stop scripts, ensure they are executable by running:
+
 ```
-docker compose up
+chmod +x run.sh
+chmod +x stop.sh
 ```
 
-If you want to delete the container you can do it with:
+This command gives the necessary permissions for the scripts to run.
+
+### 3. Run the Application
+
+To start the application, use the run.sh script. Please add one of the following arguments.
+
+Train the models:
+
 ```
-docker compose down
+./run.sh --train
 ```
+
+Train only on the flowers dataset:
+
+```
+./run.sh --train --flowers-only
+```
+
+Evaluate the models:
+
+```
+./run.sh --eval
+```
+
+Generate flower images:
+
+```
+./run.sh --generate-flowers
+```
+
+Generate CelebA images:
+
+```
+./run.sh --generate-celebs
+```
+
+### 4. Stop the Application
+
+To stop the application, use the stop.sh script:
+
+```
+./stop.sh
+```
+
+This will stop the running Docker container.
+
+### 5. Remove the Container (Optional)
+
+If you need to completely stop and remove the container, you can use:
+
+```
+docker-compose down
+```
+
+This will remove the container and associated resources.
 
 ## File Functions
 
@@ -61,7 +118,7 @@ docker compose down
 
 ## Related Works
 
-"An In-Depth Guide to Denoising Diffusion Probabilistic Models DDPM – Theory to Implementation" - by Vaibhav Singh (2023) 
+"An In-Depth Guide to Denoising Diffusion Probabilistic Models DDPM – Theory to Implementation" - by Vaibhav Singh (2023)
 
 "Denoising Diffusion Implicit Models" by András Béres (2022)
 
@@ -69,3 +126,7 @@ docker compose down
 
 - **GitHub Repositories**:
   - (https://github.com/pytorch/pytorch) - LearnOpenCV
+
+```
+
+```
