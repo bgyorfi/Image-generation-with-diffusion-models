@@ -26,28 +26,29 @@ class ClampTransform:
         return torch.clamp(img, min=self.min_value, max=self.max_value)
 
 
-def get_dataset(dataset_name="Flowers", augment=False, root="./"):
+def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./"):
     if augment:
         transforms = TF.Compose(
             [
-                TF.Resize((256, 256)),
+                TF.Resize((image_size, image_size)),
                 TF.RandomHorizontalFlip(),
                 TF.RandomRotation(15),
                 TF.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
                 TF.ToTensor(),
-                TF.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+                TF.Lambda(lambda x: x * 2.0 - 1.0),
             ]
         )
     else:
         transforms = TF.Compose(
             [
                 TF.Resize(
-                    (128, 128),
+                    (image_size, image_size),
                     interpolation=TF.InterpolationMode.BICUBIC,
                     antialias=True,
                 ),
                 TF.ToTensor(),
                 ClampTransform(min_value=0.0, max_value=1.0),
+                TF.Lambda(lambda x: x * 2.0 - 1.0),
             ]
         )
 
@@ -65,28 +66,25 @@ def get_dataset(dataset_name="Flowers", augment=False, root="./"):
     return dataset
 
 
-def split_dataset(dataset, train_ratio=0.7, val_ratio=0.15):
+def split_dataset(dataset, train_ratio=0.7):
     total_size = len(dataset)
     train_size = int(train_ratio * total_size)
-    val_size = int(val_ratio * total_size)
-    test_size = total_size - train_size - val_size
+    test_size = total_size - train_size
 
-    return random_split(dataset, [train_size, val_size, test_size])
+    return random_split(dataset, [train_size, test_size])
 
 
 def get_dataloader(
-    dataset_name="Flowers", batch_size=32, shuffle=True, device="cpu", root="./"
+    dataset_name="Flowers", batch_size=32, image_size=64, shuffle=True, augment=False, device="cpu", root="./"
 ):
-    dataset = get_dataset(dataset_name=dataset_name, root=root)
+    dataset = get_dataset(dataset_name=dataset_name, root=root, image_size=image_size, augment=augment)
 
-    train_set, val_set, test_set = split_dataset(dataset)
+    train_set, test_set = split_dataset(dataset)
 
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=shuffle)
-    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=False)
     test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
 
     train_loader = DeviceDataLoader(train_loader, device)
-    val_loader = DeviceDataLoader(val_loader, device)
     test_loader = DeviceDataLoader(test_loader, device)
 
-    return train_loader, val_loader, test_loader
+    return train_loader, test_loader
