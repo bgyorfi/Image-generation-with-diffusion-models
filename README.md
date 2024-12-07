@@ -113,13 +113,9 @@ This will remove the container and associated resources.
 
 "An In-Depth Guide to Denoising Diffusion Probabilistic Models DDPM – Theory to Implementation" - by Vaibhav Singh (2023)
 
-"Denoising Diffusion Implicit Models" by András Béres (2022)
+"[The Annotated Diffusion Model](https://huggingface.co/blog/annotated-diffusion)" - by Niels Rogge et al. (2022)
 
-"The Annotated Diffusion Model" - by Niels Rogge et al. (2022)
 
 - **GitHub Repositories**:
-  - (https://github.com/pytorch/pytorch) - LearnOpenCV
+  - https://github.com/pytorch/pytorch - LearnOpenCV
 
-```
-
-```
