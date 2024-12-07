@@ -3,8 +3,17 @@ from dataset_acquisition import init_dataset_service
 from data_preparation import dataloader_service
 import torch
 
-from model import vae_model
-from train import train_vae
+from train.train_ddpm import train_ddpm, load_data
+
+def setup_device():
+    device = torch.device(
+        "cuda"
+        if torch.cuda.is_available()
+        else "mps" if torch.backends.mps.is_built() else "cpu"
+    )
+    return device
+
+device = setup_device()
 
 def test_data_preparation():
     try:
@@ -65,33 +74,24 @@ def test_data_preparation():
     except Exception as e:
         print(f"Data preparation test failed: {e}")
 
+def train_flowers():
+    flowers_train_loader, flowers_test_loader, celeb_train_loader, celeb_test_loader = load_data(device)
+    print("Training DDPM model on Flowers dataset...")
+    model = train_ddpm(flowers_train_loader, device)
+    torch.save(model.state_dict(), 'model_flowers.pth')
+    print("Training completed.")
+
+
 def train_models(flowers_only=False):
+    flowers_train_loader, flowers_test_loader, celeb_train_loader, celeb_test_loader = load_data(device)
     if (flowers_only):
-        print("Training on flowers")
+        print("Training on flowers dataset only")
+        model = train_ddpm(flowers_train_loader, device)
+        print("Training completed.")
+        return model
     else:
         print("Training on both datasets")
     return
-
-    print("Setting up device for training...")
-
-    device = train_vae.setup_device()
-
-    flowers_train_loader, _, flowers_test_loader, celeb_train_loader, _, celeb_test_loader = train_vae.load_data()
-
-    print("Training VAE on flower dataset...")
-    model_flowers = train_vae.train(flowers_train_loader, device, num_epoch=1)
-    print("Flower model trained successfully. Saving model...")
-
-    torch.save(model_flowers.state_dict(), 'model_flowers.pth')
-
-    print("Training VAE on CelebA dataset...")
-    #model_celeb = train_vae.train(celeb_train_loader, device, num_epoch=1)
-    print("CelebA model trained successfully. Saving model...")
-
-    # torch.save(model_celeb.state_dict(), 'model_celeb.pth')
-
-    return model_flowers
-    #, model_celeb
 
 def load_models():
     print("loading modes")
@@ -122,8 +122,8 @@ def generate_images(model_name):
 if __name__ == "__main__":
     try:
         parser = argparse.ArgumentParser(description='Train, evaluate, and generate images using DDPM models.')
-        parser.add_argument('--train', action='store_true', help='Train DDPM models')
-        parser.add_argument('--flowers-only', action='store_true', help='Train only on flowers dataset')
+        parser.add_argument('--train-flowers', action='store_true', help='Train DDPM model on flowers dataset')
+        parser.add_argument('--flowers-celebs', action='store_true', help='Train DDPM model on CelebA dataset')
         parser.add_argument('--eval', action='store_true', help='Evaluate DDPM models')
         parser.add_argument('--generate-flowers', action='store_true', help='Generate flower images')
         parser.add_argument('--generate-celebs', action='store_true', help='Generate CelebA images')
