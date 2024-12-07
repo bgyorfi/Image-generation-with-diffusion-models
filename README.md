@@ -63,8 +63,8 @@ Train the models:
 Evaluate the models:
 
 ```
-./run.sh --eval            # Evaluate best model
-./run.sh --eval --latest   # Evaluate latest model
+./run.sh --eval                        # Evaluate best model
+./run.sh --eval --latest               # Evaluate latest model
 ```
 
 Generate flower images:
