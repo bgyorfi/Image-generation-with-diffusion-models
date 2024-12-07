@@ -51,7 +51,13 @@ This command gives the necessary permissions for the scripts to run.
 
 ### 3. Run the Application
 
-To start the application, use the run.sh script. Please add one of the following arguments.
+To start the application, use the run.sh script.
+
+Run the gradio interface at [localhost:7860](http://localhost:7860):
+
+```
+./run.sh
+```
 
 Train the models:
 

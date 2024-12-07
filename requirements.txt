@@ -1,5 +1,6 @@
 numpy
 pillow
+gradio
 tqdm
 datetime
 requests

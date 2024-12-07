@@ -18,4 +18,6 @@ RUN mkdir -p /app/datasets/flowers102 /app/datasets/celeba && \
 RUN mkdir -p /app/images/flowers /app/images/celeba && \
     chmod -R 777 /app/images
 
+EXPOSE 7860
+
 CMD ["python", "src/main.py"]

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Function to display help
 function show_help {
     echo "Usage: $0 [--train] [--flowers-only] [--eval] [--generate-flowers] [--generate-celebs]"
     echo "Options:"
@@ -14,11 +13,9 @@ function show_help {
 }
 
 if [ $# -eq 0 ]; then
-    show_help
-    exit 1
+    docker compose up
 fi
 
-# Parse command-line arguments
 COMMAND_ARGS=()
 for arg in "$@"; do
     case $arg in
@@ -54,13 +51,10 @@ for arg in "$@"; do
     esac
 done
 
-# Build the command to run inside the container
 DOCKER_COMMAND="python src/main.py ${COMMAND_ARGS[@]}"
 
-# Define the container name
 container_name="ddpm-container"
 
-# Check if the container exists (running or stopped)
 if docker ps -a --filter "name=${container_name}" | grep -q ${container_name}; then
     if docker ps --filter "name=${container_name}" | grep -q ${container_name}; then
         docker exec -it ${container_name} $DOCKER_COMMAND

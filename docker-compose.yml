@@ -3,10 +3,12 @@ services:
     build: .
     image: ddpm-project
     container_name: ddpm-container
-    stdin_open: true 
+    stdin_open: true
     tty: true
     volumes:
       - ./data:/app/datasets
       - ./images/celeba:/app/images/celeba
       - ./images/flowers:/app/images/flowers
+    ports:
+      - "7860:7860"
     command: ["python", "src/main.py"]
