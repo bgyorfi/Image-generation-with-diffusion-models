@@ -7,4 +7,6 @@ services:
     tty: true
     volumes:
       - ./data:/app/datasets
+      - ./images/celeba:/app/images/celeba
+      - ./images/flowers:/app/images/flowers
     command: ["python", "src/main.py"]

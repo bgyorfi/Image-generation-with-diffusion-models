@@ -3,7 +3,8 @@ from dataset_acquisition import init_dataset_service
 from data_preparation import dataloader_service
 import torch
 
-from train.train_ddpm import train_ddpm, load_data
+from train.train_ddpm import train_ddpm, load_data, load_flowers, load_celebs
+from model.generate import generate_images_from_model
 
 def setup_device():
     device = torch.device(
@@ -78,53 +79,36 @@ def train_flowers():
     flowers_train_loader, flowers_test_loader, celeb_train_loader, celeb_test_loader = load_data(device)
     print("Training DDPM model on Flowers dataset...")
     model = train_ddpm(flowers_train_loader, device)
-    torch.save(model.state_dict(), 'model_flowers.pth')
+    torch.save(model.state_dict(), '/app/models/flowers/flowers_model.pth')
     print("Training completed.")
 
-
-def train_models(flowers_only=False):
+def train_celebs():
     flowers_train_loader, flowers_test_loader, celeb_train_loader, celeb_test_loader = load_data(device)
-    if (flowers_only):
-        print("Training on flowers dataset only")
-        model = train_ddpm(flowers_train_loader, device)
-        print("Training completed.")
-        return model
+    print("Training DDPM model on CelebA dataset...")
+    model = train_ddpm(celeb_train_loader, device)
+    torch.save(model.state_dict(), '/app/models/celeba/celeba_model.pth')
+    print("Training completed.")
+
+def generate_images(dataset, latest=False):
+    print(f"Generating images for {dataset} dataset...")
+    if dataset == "flowers":
+        model = load_flowers(device, best=not latest)
+    elif dataset == "celeba":
+        model = load_celebs(device, best=not latest)
     else:
-        print("Training on both datasets")
-    return
+        print("Invalid dataset name.")
+        return
 
-def load_models():
-    print("loading modes")
-    return 
-    print("Loading trained models from disk...")
-    device = train_vae.setup_device()
-    model_flowers = vae_model.VAE()
-    # model_celeb = vae_model.VAE()
-    model_flowers.load_state_dict(torch.load('model_flowers.pth'))
-    # model_celeb.load_state_dict(torch.load('model_celeb.pth'))
-    print("Models loaded successfully.")
-    return model_flowers, device
-#  return model_flowers, model_celeb, device
-
-def generate_images(model_name):
-    print(f"Generating images from {model_name}...")
-    return
-    print("Generating images...")
-
-    if args.generate_flower:
-        train_vae.generate_images(model_flowers, device, output_dir='generated_flower_images')
-        print("Flower images generated successfully.")
-    # elif args.generate_celeb:
-    #     train_vae.generate_images(model_celeb, device, output_dir='generated_celeb_images')
-    #     print("CelebA images generated successfully.")
-
+    generate_images_from_model(model, number_of_images=4, dataset=dataset)
+    print("Image generation completed.")
 
 if __name__ == "__main__":
     try:
         parser = argparse.ArgumentParser(description='Train, evaluate, and generate images using DDPM models.')
         parser.add_argument('--train-flowers', action='store_true', help='Train DDPM model on flowers dataset')
-        parser.add_argument('--flowers-celebs', action='store_true', help='Train DDPM model on CelebA dataset')
+        parser.add_argument('--train-celebs', action='store_true', help='Train DDPM model on CelebA dataset')
         parser.add_argument('--eval', action='store_true', help='Evaluate DDPM models')
+        parser.add_argument('--latest', action='store_true', help='Works with --eval or --generate. Use latest trained model instead of best.')
         parser.add_argument('--generate-flowers', action='store_true', help='Generate flower images')
         parser.add_argument('--generate-celebs', action='store_true', help='Generate CelebA images')
 
@@ -132,14 +116,18 @@ if __name__ == "__main__":
 
         init_dataset_service.download_datasets()
 
-        if args.train:
-            train_models(flowers_only=args.flowers_only)
+        if args.train_flowers:
+            train_flowers()
+        elif args.train_celebs:
+            train_celebs()
+        elif args.eval and args.latest:
+            print("Evaluating latest models...")
         elif args.eval:
-            print("Evaluating models...")
+            print("Evaluating best models...")
         elif args.generate_flowers:
-            generate_images("flowers")
+            generate_images("flowers", latest=args.latest)
         elif args.generate_celebs:
-            generate_images("CelebA")
+            generate_images("celeba", latest=args.latest)
 
         while True:
             pass

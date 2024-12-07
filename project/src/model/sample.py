@@ -40,7 +40,7 @@ def extract(a, t, x_shape):
     out = a.gather(-1, t.cpu())
     return out.reshape(batch_size, *((1,) * (len(x_shape) - 1))).to(t.device)
 
-params = DiffusionParameters(TIMESTEPS, cosine_beta_schedule)
+params = DiffusionParameters(TIMESTEPS, linear_beta_schedule)
 
 def q_sample(x_start, t, noise=None):
     if noise is None:

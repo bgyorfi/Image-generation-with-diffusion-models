@@ -71,3 +71,28 @@ def load_data(device):
         celeb_test_loader,
     )
 
+def load_flowers(device, best=True):
+    model = Unet(
+        dim=IMAGE_SIZE,
+        dim_mults=(1, 2, 4,)
+    )
+    model.to("cpu")
+    if best:
+        model.load_state_dict(torch.load('/app/models/flowers/flowers_model_best.pth', map_location="cpu", weights_only=False))
+    else:
+        model.load_state_dict(torch.load('/app/models/flowers/flowers_model.pth', map_location="cpu", weights_only=False))
+    model.to(device)
+    return model
+
+def load_celebs(device, best=True):
+    model = Unet(
+        dim=IMAGE_SIZE,
+        dim_mults=(1, 2, 4,)
+    )
+    model.to("cpu")
+    if best:
+        model.load_state_dict(torch.load('/app/models/celeba/celeba_model_best.pth', map_location="cpu", weights_only=False))
+    else:
+        model.load_state_dict(torch.load('/app/models/celeba/celeba_model.pth', map_location="cpu", weights_only=False))
+    model.to(device)
+    return model

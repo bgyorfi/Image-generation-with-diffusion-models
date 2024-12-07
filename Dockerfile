@@ -15,4 +15,7 @@ RUN chmod 600 ./kaggle.json
 RUN mkdir -p /app/datasets/flowers102 /app/datasets/celeba && \
     chmod -R 777 /app/datasets
 
+RUN mkdir -p /app/images/flowers /app/images/celeba && \
+    chmod -R 777 /app/images
+
 CMD ["python", "src/main.py"]

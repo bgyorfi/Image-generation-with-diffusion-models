@@ -56,31 +56,24 @@ To start the application, use the run.sh script. Please add one of the following
 Train the models:
 
 ```
-./run.sh --train
-```
-
-Train only on the flowers dataset:
-
-```
-./run.sh --train --flowers-only
+./run.sh --train-flowers
+./run.sh --train-celebs
 ```
 
 Evaluate the models:
 
 ```
-./run.sh --eval
+./run.sh --eval            # Evaluate best model
+./run.sh --eval --latest   # Evaluate latest model
 ```
 
 Generate flower images:
 
 ```
-./run.sh --generate-flowers
-```
-
-Generate CelebA images:
-
-```
-./run.sh --generate-celebs
+./run.sh --generate-flowers            # Use best model
+./run.sh --generate-flowers --latest   # Use latest model instead of best
+./run.sh --generate-celebs             # Use best model
+./run.sh --generate-celebs --latest    # Use latest model instead of best
 ```
 
 ### 4. Stop the Application
