@@ -4,11 +4,12 @@
 function show_help {
     echo "Usage: $0 [--train] [--flowers-only] [--eval] [--generate-flowers] [--generate-celebs]"
     echo "Options:"
-    echo "  --train               Train DDPM models"
-    echo "  --flowers-only        Train only on the flowers dataset (used with --train)"
+    echo "  --train-flowers       Train DDPM models on flowers dataset"
+    echo "  --train-celebs        Train DDPM models on CelebA dataset"
     echo "  --eval                Evaluate DDPM models"
     echo "  --generate-flowers    Generate images from the flowers dataset"
     echo "  --generate-celebs     Generate images from the CelebA dataset"
+    echo "  --latest              Works with --eval or --generate-* to use the latest trained model, instead of the best model"    
     echo "  -h, --help            Show this help message"
 }
 
@@ -21,12 +22,12 @@ fi
 COMMAND_ARGS=()
 for arg in "$@"; do
     case $arg in
-        --train)
-            COMMAND_ARGS+=("--train")
+        --train-flowers)
+            COMMAND_ARGS+=("--train-flowers")
             shift
             ;;
-        --flowers-only)
-            COMMAND_ARGS+=("--flowers-only")
+        --train-celebs)
+            COMMAND_ARGS+=("--train-celebs")
             shift
             ;;
         --eval)
@@ -64,7 +65,7 @@ if docker ps -a --filter "name=${container_name}" | grep -q ${container_name}; t
     if docker ps --filter "name=${container_name}" | grep -q ${container_name}; then
         docker exec -it ${container_name} $DOCKER_COMMAND
     else
-        docker start ${container_name}
+        docker compose up -d
         docker exec -it ${container_name} $DOCKER_COMMAND
     fi
 else
