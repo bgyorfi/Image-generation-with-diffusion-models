@@ -1,14 +1,12 @@
 #!/bin/bash
 
 function show_help {
-    echo "Usage: $0 [--train] [--flowers-only] [--eval] [--generate-flowers] [--generate-celebs]"
     echo "Options:"
     echo "  --train-flowers       Train DDPM models on flowers dataset"
     echo "  --train-celebs        Train DDPM models on CelebA dataset"
-    echo "  --eval                Evaluate DDPM models"
     echo "  --generate-flowers    Generate images from the flowers dataset"
     echo "  --generate-celebs     Generate images from the CelebA dataset"
-    echo "  --latest              Works with --eval or --generate-* to use the latest trained model, instead of the best model"    
+    echo "  --latest              Works with --generate-* to use the latest trained model, instead of the best model"    
     echo "  -h, --help            Show this help message"
 }
 
@@ -25,10 +23,6 @@ for arg in "$@"; do
             ;;
         --train-celebs)
             COMMAND_ARGS+=("--train-celebs")
-            shift
-            ;;
-        --eval)
-            COMMAND_ARGS+=("--eval")
             shift
             ;;
         --generate-flowers)

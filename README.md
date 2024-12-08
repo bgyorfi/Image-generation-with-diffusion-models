@@ -75,6 +75,12 @@ Generate flower images:
 ./run.sh --generate-celebs --latest    # Use latest model instead of best
 ```
 
+Get command options:
+
+```
+./run.sh --help
+```
+
 ### 4. Stop the Application
 
 To stop the application, use the stop.sh script:

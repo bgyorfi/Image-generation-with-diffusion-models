@@ -88,8 +88,7 @@ if __name__ == "__main__":
         parser = argparse.ArgumentParser(description='Train, evaluate, and generate images using DDPM models.')
         parser.add_argument('--train-flowers', action='store_true', help='Train DDPM model on flowers dataset')
         parser.add_argument('--train-celebs', action='store_true', help='Train DDPM model on CelebA dataset')
-        parser.add_argument('--eval', action='store_true', help='Evaluate DDPM models')
-        parser.add_argument('--latest', action='store_true', help='Works with --eval or --generate. Use latest trained model instead of best.')
+        parser.add_argument('--latest', action='store_true', help='Works with --generate. Use latest trained model instead of best.')
         parser.add_argument('--generate-flowers', action='store_true', help='Generate flower images')
         parser.add_argument('--generate-celebs', action='store_true', help='Generate CelebA images')
 
@@ -101,10 +100,6 @@ if __name__ == "__main__":
             train_flowers()
         elif args.train_celebs:
             train_celebs()
-        elif args.eval and args.latest:
-            print("Evaluating latest models...")
-        elif args.eval:
-            print("Evaluating best models...")
         elif args.generate_flowers:
             generate_images("flowers", latest=args.latest)
         elif args.generate_celebs:
