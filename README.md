@@ -66,13 +66,6 @@ Train the models:
 ./run.sh --train-celebs
 ```
 
-Evaluate the models:
-
-```
-./run.sh --eval                        # Evaluate best model
-./run.sh --eval --latest               # Evaluate latest model
-```
-
 Generate flower images:
 
 ```
@@ -102,26 +95,66 @@ docker-compose down
 
 This will remove the container and associated resources.
 
-## File Functions
+# File Functions
 
-- **`data_preparation/`**: This directory contains scripts related to data preparation and loading.
-  - **`dataloader_service.py`**: Responsible for creating DataLoader instances for training, validation, and testing datasets. It handles batching and shuffling of data.
-  - **`init_dataset_service.py`**: Initializes the dataset service, manages dataset access and setup.
-- **`main.py`**: The main entry point for running the data preparation tests and loading the datasets.
-- **`docker-compose.yml`**: Makes it easier to run the container as an application.
-- **`Dockerfile`**: Contains the instructions to build a Docker container for the application. It sets up the environment, installs dependencies, and configures the working directory.
-- **`.gitignore`**: Lists files and directories to be ignored by Git, ensuring that unnecessary files are not included in the version control.
-- **`kaggle.json`**: Contains API credentials for accessing Kaggle datasets.
-- **`requirements.txt`**: Lists Python package dependencies required to run the project.
-- **`README.md`**: This file, which provides an overview and documentation for the project.
+### `docs/`
+Tartalmazza a projekt dokumentációját, képeit és generált eredményeit.
+- **`images/`**: A projekt által használt és generált képek mappája.
+  - **`celeba/`**: A CelebA adathalmazhoz kapcsolódó mintaképek.
+  - **`flowers/`**: A virágok adathalmazhoz kapcsolódó mintaképek.
+  - **`results/`**: Nagyobb méretű képhalmazok
+    - **`generated_celeb_vae_images/`**: CelebA adathalmazból generált képek VAE segítségével.
+    - **`generated_ddpm_celeb_images/`**: CelebA adathalmazból generált képek DDPM segítségével.
+    - **`generated_flower_ddpm_images/`**: Virágok adathalmazból generált képek DDPM segítségével.
+    - **`generated_flower_vae_images/`**: Virágok adathalmazból generált képek VAE segítségével.
+
+### `project/`
+A projekt gyökérkönyvtára, amely az adathalmazokat, modelleket, kódfájlokat és notebookokat tartalmazza.
+- **`models/`**: A mentett modellek és modellezéshez kapcsolódó osztályok.
+  - **`celeba/`**: CelebA modellek. (*_best elnevezésű a DDPM model)
+  - **`flowers/`**: Virág modellek.  (*_best elnevezésű a DDPM model)
+- **`notebooks/`**: Jupyter notebookok a projekt vizualizációjához, tanításához, elemzéséhez, kiértékeléséhez.
+- **`src/`**: Forráskód a modell és adathalmaz kezeléséhez.
+  - **`dataset_acquisition/`**: Az adathalmaz letöltéséhez és kezeléséhez szükséges kódok.
+  - **`data_preparation/`**: Az adatok előkészítését végző kódok.
+  - **`model/`**: A modellek definiálásához és kezeléséhez szükséges kódok, főként a DDPM modelhez szükséges segédosztályok.
+  - **`train/`**: A modellek tanításához tartozó kódok.
+- **`train/`**: Tanításhoz szükséges konfigurációs fájlok.
+  - **`interface.py`**: Egy Gradio alapú vizuális interfész, amely lehetővé teszi a CelebA és virág képek generálását lépésenkénti előrehaladással, valamint a generált képek galériában történő megjelenítését. Az interfész valós időben frissíti az eredményeket a felhasználói interakciók alapján.
+  - **`main.py`**: A fő futtató script, amely az alkalmazás különböző funkcióit kezeli, mint például adatok előkészítése, DDPM modellek tanítása (virágok és CelebA adathalmazokon), értékelés és kép generálás. Gradio interfészen keresztül lehetőség van a generált képek megtekintésére, vagy parancssori argumentumokkal modellek tanítására és értékelésére.
+
+
+### További file-ok a gyökérkönyvtárban
+- **`.gitignore`**: Azokat a fájlokat listázza, amelyeket a Git figyelmen kívül hagy.
+- **`docker-compose.yml`**: A Docker konténer indításának konfigurációját tartalmazza.
+- **`Dockerfile`**: A Docker konténer környezetének definiálásához szükséges fájl.
+- **`kaggle.json`**: API kulcs a Kaggle adathalmazok letöltéséhez.
+- **`README.md`**: A projekt áttekintése és dokumentációja.
+- **`requirements.txt`**: A Python függőségeket tartalmazó fájl.
+- **`run.sh`**: Script az alkalmazás elindításához.
+- **`stop.sh`**: Script az alkalmazás leállításához.
+- **`Summary_Of_Semester_Work.pdf`**: A szemeszteri munka összefoglaló dokumentuma.
 
 ## Related Works
 
-"An In-Depth Guide to Denoising Diffusion Probabilistic Models DDPM – Theory to Implementation" - by Vaibhav Singh (2023)
+### Research Articles and Blogs
+1. Vaibhav Singh. *An In-Depth Guide to Denoising Diffusion Probabilistic Models DDPM – Theory to Implementation* (2023).  
+   [LearnOpenCV](https://learnopencv.com/denoising-diffusion-probabilistic-models/)
 
-"[The Annotated Diffusion Model](https://huggingface.co/blog/annotated-diffusion)" - by Niels Rogge et al. (2022)
+2. Niels Rogge et al. *The Annotated Diffusion Model*.  
+   [Hugging Face Blog](https://huggingface.co/blog/annotated-diffusion)
 
+---
 
-- **GitHub Repositories**:
-  - https://github.com/pytorch/pytorch - LearnOpenCV
+### GitHub Repositories
+1. Hugging Face. *Diffusers Library*.  
+   [https://github.com/huggingface/diffusers](https://github.com/huggingface/diffusers)
 
+2. Mallick, S. *Guide to Training DDPMs from Scratch: Generating Flowers Using DDPMs*.  
+   [LearnOpenCV GitHub Repository](https://github.com/spmallick/learnopencv/blob/master/Guide-to-training-DDPMs-from-Scratch/Generating_flowers_using_DDPMs.ipynb)
+
+3. LearnOpenCV. *Denoising Diffusion Probabilistic Models*.  
+   [https://learnopencv.com/denoising-diffusion-probabilistic-models/#What-Are-Diffusion-Probabilistic-Models](https://learnopencv.com/denoising-diffusion-probabilistic-models/#What-Are-Diffusion-Probabilistic-Models)
+
+4. Keras Documentation. *Denoising Diffusion Implicit Models (DDIM)*.  
+   [https://keras.io/examples/generative/ddim/](https://keras.io/examples/generative/ddim/)
