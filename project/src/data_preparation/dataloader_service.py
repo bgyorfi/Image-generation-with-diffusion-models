@@ -8,6 +8,7 @@ class DeviceDataLoader:
     def __init__(self, dataloader, device):
         self.dataloader = dataloader
         self.device = device
+        self.dataset = dataloader.dataset
 
     def __iter__(self):
         for b in self.dataloader:
@@ -15,6 +16,9 @@ class DeviceDataLoader:
 
     def __len__(self):
         return len(self.dataloader)
+    
+    def get_dataset(self):
+        return self.dataset 
 
 
 class ClampTransform:
@@ -26,7 +30,7 @@ class ClampTransform:
         return torch.clamp(img, min=self.min_value, max=self.max_value)
 
 
-def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./datasets/", baseline=False):
+def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./datasets", baseline=False):
     if augment:
         transforms = TF.Compose(
             [
@@ -54,11 +58,11 @@ def get_dataset(dataset_name="Flowers", image_size=64, augment=False, root="./da
 
     if dataset_name == "Flowers":
         dataset = ImageFolder(
-            root=f"{root}flowers102/flowers-recognition/flowers", transform=transforms
+            root=f"{root}flowers-recognition/flowers", transform=transforms
         )
     elif dataset_name == "CelebA":
         dataset = ImageFolder(
-            root=f"{root}celeba-dataset/celeba-dataset/img_align_celeba", transform=transforms
+            root=f"{root}celeba-dataset/img_align_celeba", transform=transforms
         )
     else:
         raise ValueError(f"Dataset {dataset_name} is not supported.")
@@ -75,7 +79,7 @@ def split_dataset(dataset, train_ratio=0.7):
 
 
 def get_dataloader(
-    dataset_name="Flowers", batch_size=32, image_size=64, shuffle=True, augment=False, device="cpu", root="./", baseline=False
+    dataset_name="Flowers", batch_size=32, image_size=64, shuffle=True, augment=False, device="cpu", root="./../", baseline=False
 ):
     dataset = get_dataset(dataset_name=dataset_name, root=root, image_size=image_size, augment=augment, baseline=baseline)
 
