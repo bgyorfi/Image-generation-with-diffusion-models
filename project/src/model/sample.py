@@ -1,9 +1,19 @@
 import torch
 import torch.nn.functional as F
 from tqdm.auto import tqdm
+import numpy as np
+from torchvision import transforms as TF
 
 from model.params import DiffusionParameters
 from constants import TIMESTEPS
+
+reverse_transform = TF.Compose([
+    TF.Lambda(lambda t: (t + 1) / 2),
+    TF.Lambda(lambda t: t.permute(1, 2, 0)),
+    TF.Lambda(lambda t: t * 255.),
+    TF.Lambda(lambda t: t.numpy().astype(np.uint8)),
+    TF.ToPILImage()
+])
 
 def cosine_beta_schedule(timesteps, s=0.008):
     """
@@ -111,4 +121,14 @@ def p_sample_loop(model, shape):
 @torch.no_grad()
 def sample(model, image_size, batch_size=16, channels=3):
     return p_sample_loop(model, shape=(batch_size, channels, image_size, image_size))
+
+@torch.no_grad()
+def sample_with_steps(model, image_size, batch_size=16, channels=3):
+    device = next(model.parameters()).device
+    img = torch.randn((batch_size, channels, image_size, image_size), device=device)
+
+    for i in tqdm(reversed(range(0, params.timesteps)), desc="sampling loop time step", total=params.timesteps):
+        img = p_sample(model, img, torch.full((batch_size,), i, device=device, dtype=torch.long), i)
+        current_image = reverse_transform(img[0].cpu()) 
+        yield current_image, reverse_transform(img[0].cpu()) 
 

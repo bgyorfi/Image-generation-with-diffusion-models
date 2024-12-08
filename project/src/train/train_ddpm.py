@@ -6,7 +6,17 @@ from constants import IMAGE_SIZE, NUM_EPOCH, BATCH_SIZE
 from model.sample import params, p_losses
 from data_preparation import dataloader_service
 
-def train_ddpm(loader, device):
+def setup_device():
+    device = torch.device(
+        "cuda"
+        if torch.cuda.is_available()
+        else "mps" if torch.backends.mps.is_built() else "cpu"
+    )
+    return device
+
+device = setup_device()
+
+def train_ddpm(loader):
     model = Unet(
         dim=IMAGE_SIZE,
         dim_mults=(1, 2, 4,)
@@ -41,7 +51,7 @@ def train_ddpm(loader, device):
     return model
 
 
-def load_data(device):
+def load_data():
     flowers_train_loader, flowers_test_loader = (
         dataloader_service.get_dataloader(
             dataset_name="Flowers",
@@ -71,7 +81,7 @@ def load_data(device):
         celeb_test_loader,
     )
 
-def load_flowers(device, best=True):
+def load_flowers_model(best=True):
     model = Unet(
         dim=IMAGE_SIZE,
         dim_mults=(1, 2, 4,)
@@ -84,7 +94,7 @@ def load_flowers(device, best=True):
     model.to(device)
     return model
 
-def load_celebs(device, best=True):
+def load_celebs_model(best=True):
     model = Unet(
         dim=IMAGE_SIZE,
         dim_mults=(1, 2, 4,)

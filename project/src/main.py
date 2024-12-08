@@ -3,16 +3,9 @@ from dataset_acquisition import init_dataset_service
 from data_preparation import dataloader_service
 import torch
 
-from train.train_ddpm import train_ddpm, load_data, load_flowers, load_celebs
-from model.generate import generate_images_from_model
-
-def setup_device():
-    device = torch.device(
-        "cuda"
-        if torch.cuda.is_available()
-        else "mps" if torch.backends.mps.is_built() else "cpu"
-    )
-    return device
+from train.train_ddpm import train_ddpm, load_data, setup_device
+from model.generate import generate_images
+from interface import create_interface
 
 device = setup_device()
 
@@ -76,31 +69,18 @@ def test_data_preparation():
         print(f"Data preparation test failed: {e}")
 
 def train_flowers():
-    flowers_train_loader, flowers_test_loader, celeb_train_loader, celeb_test_loader = load_data(device)
+    flowers_train_loader, flowers_test_loader, celeb_train_loader, celeb_test_loader = load_data()
     print("Training DDPM model on Flowers dataset...")
-    model = train_ddpm(flowers_train_loader, device)
+    model = train_ddpm(flowers_train_loader)
     torch.save(model.state_dict(), '/app/models/flowers/flowers_model.pth')
     print("Training completed.")
 
 def train_celebs():
-    flowers_train_loader, flowers_test_loader, celeb_train_loader, celeb_test_loader = load_data(device)
+    flowers_train_loader, flowers_test_loader, celeb_train_loader, celeb_test_loader = load_data()
     print("Training DDPM model on CelebA dataset...")
-    model = train_ddpm(celeb_train_loader, device)
+    model = train_ddpm(celeb_train_loader)
     torch.save(model.state_dict(), '/app/models/celeba/celeba_model.pth')
     print("Training completed.")
-
-def generate_images(dataset, latest=False):
-    print(f"Generating images for {dataset} dataset...")
-    if dataset == "flowers":
-        model = load_flowers(device, best=not latest)
-    elif dataset == "celeba":
-        model = load_celebs(device, best=not latest)
-    else:
-        print("Invalid dataset name.")
-        return
-
-    generate_images_from_model(model, number_of_images=4, dataset=dataset)
-    print("Image generation completed.")
 
 if __name__ == "__main__":
     try:
@@ -128,6 +108,10 @@ if __name__ == "__main__":
             generate_images("flowers", latest=args.latest)
         elif args.generate_celebs:
             generate_images("celeba", latest=args.latest)
+
+        else:
+            app = create_interface()
+            app.launch(server_name="0.0.0.0", server_port=7860)
 
         while True:
             pass
