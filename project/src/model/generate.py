@@ -42,3 +42,6 @@ def generate_images_with_steps(dataset):
 
     for current_image, final_image in sample_with_steps(model, IMAGE_SIZE, batch_size=1, channels=3):
         yield current_image, final_image
+
+    image_path = f"/app/images/{dataset}/{pd.Timestamp.now().strftime('%Y-%m-%d-%H-%M')}.png"
+    final_image.save(image_path)
