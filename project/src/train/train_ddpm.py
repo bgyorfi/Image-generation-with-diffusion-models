@@ -59,7 +59,7 @@ def load_data():
             image_size=IMAGE_SIZE,
             shuffle=True,
             device=device,
-            root="/app/datasets/",
+            root="/app/datasets/flowers102/",
         )
     )
 
@@ -70,7 +70,7 @@ def load_data():
             image_size=IMAGE_SIZE,
             shuffle=True,
             device=device,
-            root="/app/datasets/",
+            root="/app/datasets/celeba-dataset/",
         )
     )
 

@@ -19,7 +19,8 @@ def test_data_preparation():
             dataset_name="Flowers",
             batch_size=32,
             shuffle=True,
-            device=device
+            device=device,
+            root="/app/datasets/flowers102/",
         )
 
         print("Running data preparation test...")
